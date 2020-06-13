@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Steps, Layout, Row, Col } from 'antd';
 import FormPartOne from './components/QuoteForm/formPartOne';
 import FormPartTwo from './components/QuoteForm/formPartTwo';
+import ConfirmationPage from './components/confirmation';
 import QuoteModal from './components/quoteModal';
 import 'antd/dist/antd.css';
 import './App.css';
@@ -248,7 +249,7 @@ class App extends Component {
               ? <FormPartOne formOneComplete={this.formOneComplete} />
               : !this.state.formTwoComplete
               ? <FormPartTwo formTwoComplete={this.formTwoComplete} userOrigin={this.state.userOrigin} />
-              : <div>COMPLETE</div>
+              : <ConfirmationPage />
             }
             {
               this.state.showModal
