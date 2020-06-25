@@ -1,17 +1,19 @@
 const express = require('express');
-
+const bodyParser = require('body-parser');
 const app = express();
 
-app.get('/api/customers', (req, res) => {
-  const customers = [
-    {id: 1, firstName: 'John', lastName: 'Doe'},
-    {id: 2, firstName: 'Brad', lastName: 'Traversy'},
-    {id: 3, firstName: 'Mary', lastName: 'Swanson'},
-  ];
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-  res.json(customers);
-});
+const emailRoute = require('./api/routes/sendEmail');
+const mapsRoute = require('./api/routes/googleRoutes');
+
 
 const port = 5000;
+
+
+
+app.use('/api/sendEmail', emailRoute);
+app.use('/api/distance', mapsRoute);
 
 app.listen(port, () => `Server running on port ${port}`);

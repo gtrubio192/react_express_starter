@@ -69,7 +69,6 @@ class App extends Component {
               if(formattedDistance < first.distance) {
                 first.distance = formattedDistance
                 first.hub = destination
-                
               }
               userOrigin = origin;
           } else {
