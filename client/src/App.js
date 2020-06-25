@@ -259,8 +259,8 @@ class App extends Component {
           </Content>
           <Footer>
             Contact Us
-            <p>PHONE NUMBER</p>
-            <p>EMAIL</p>
+            <p>512-271-9428</p>
+            <p>sales@bobscontainers.com</p>
           </Footer>
         </Layout>
       </div>
