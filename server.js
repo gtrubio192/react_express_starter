@@ -9,8 +9,7 @@ const emailRoute = require('./api/routes/sendEmail');
 const mapsRoute = require('./api/routes/googleRoutes');
 
 
-const port = 5000;
-
+const port = process.env.PORT || 5000;
 
 
 app.use('/api/sendEmail', emailRoute);
