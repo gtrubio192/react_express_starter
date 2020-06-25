@@ -10,7 +10,7 @@
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "cd client && npm run build",
-    "install-client": "cd client && npm install", 
+    "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build"
   },
   "author": "Brad Traversy",
@@ -24,6 +24,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.16.2",
     "google-distance-matrix": "^1.1.1",
-    "nodemailer": "^6.4.8"
+    "nodemailer": "^6.4.8",
+    "nodemailer-mailgun-transport": "^2.0.0"
   }
 }

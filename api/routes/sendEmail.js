@@ -4,7 +4,8 @@ const router = express.Router();
 const dotenv = require('dotenv');
 dotenv.config();
 
-var nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
+const mailGun = require('nodemailer-mailgun-transport');
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -18,12 +19,22 @@ router.post('/', (req, res, next) => {
   const containerType = req.body.container;
   const containerQuantity = req.body.quantity;
 
+  // const auth = {
+  //   auth: {
+  //       api_key: process.env.API_KEY || 'mailgun_api_key', // TODO: 
+  //       domain: process.env.DOMAIN || 'mailgun_domain' // TODO:
+  //   }
+  // };
+
+// Step 2
+  var transporter = nodemailer.createTransport( mailGun(auth) );
+
   // FOR PROD
   // User Sendgrid or Mailgun (remove 'gmail')
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'tech@bobscontainers.com',
+      user: 'sales@bobscontainers.com',
       pass: process.env.USER_PASSWORD
     }
   });
