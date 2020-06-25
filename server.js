@@ -15,4 +15,8 @@ const port = process.env.PORT || 5000;
 app.use('/api/sendEmail', emailRoute);
 app.use('/api/distance', mapsRoute);
 
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'))
+}
+
 app.listen(port, () => `Server running on port ${port}`);
