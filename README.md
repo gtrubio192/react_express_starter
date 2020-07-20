@@ -1,4 +1,4 @@
-# React Express Starter Pack
+# React Express + Google Distance Matrix
 
 > Create full stack apps with React and Express. Run your client and server with a single command. 
 
@@ -28,11 +28,11 @@ npm run client
 ```
 
 ## App Info
+Estimate final price of a container with shipping cost
 
 ### Author
 
-Brad Traversy
-[Traversy Media](http://www.traversymedia.com)
+Gabe Rubio
 
 ### Version
 
