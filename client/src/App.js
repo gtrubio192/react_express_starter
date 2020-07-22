@@ -24,6 +24,9 @@ class App extends Component {
       shortestRoute: {}
     }
 
+    // all cities in Texas, Colorado, Ohio
+    // dallas - 75141
+    // houston - channelview
     this.containers = {
       "20_standard_new": "20' Standard New",
       "20_highCube_new": "20' High Cube New",
@@ -55,7 +58,7 @@ class App extends Component {
       hub: ''
     };
 
-    let userOrigin;
+    let userOrigin = {};
 
     for (let i=0; i < this.state.origins.length; i++) {
       for (let j = 0; j < this.state.hubs.length; j++) {
@@ -70,7 +73,8 @@ class App extends Component {
                 first.distance = formattedDistance
                 first.hub = destination
               }
-              userOrigin = origin;
+              userOrigin.address = origin;
+              userOrigin.city = origin.split(',')[0]
           } else {
               console.log(destination + ' is not reachable by land from ' + origin);
           }
@@ -80,7 +84,7 @@ class App extends Component {
     this.setState({
       shortestRoute: first,
       userOrigin
-     }, this.calculateTotalCost);
+     }, this.getContainerCostAtHub);
   }
 
   calculateDeliveryRate = () => {
@@ -100,88 +104,61 @@ class App extends Component {
   }
 
   getContainerCostAtHub = () => {
-    const hubPrices = {
-      "Creedmoor, TX 78610, USA": {
-        "20_standard_new": "3571",
-        "20_highCube_new": "4429",
-        "40_standard_new": "5601",
-        "40_highCube_new": "6000",
-        "20_standard_used": "2000",
-        "20_highCube_used":  "-1",
-        "40_standard_used": "2714",
-        "40_highCube_used": "2857",
-      },
-      "Houston, TX 77049, USA": {
-        "20_standard_new": "3571",
-        "20_highCube_new": "4350",
-        "40_standard_new": "5601",
-        "40_highCube_new": "6000",
-        "20_standard_used": "1714",
-        "20_highCube_used":  "-1",
-        "40_standard_used": "2143",
-        "40_highCube_used": "2286",
-      },
-      "Dallas, TX 75216, USA": {
-        "20_standard_new": "3286",
-        "20_highCube_new": "-1",
-        "40_standard_new": "5601",
-        "40_highCube_new": "6000",
-        "20_standard_used": "1979",
-        "20_highCube_used":  "-1",
-        "40_standard_used": "2336",
-        "40_highCube_used": "2479",
-      },
-      "Denver, CO 80216, USA": { 
-        "20_standard_new": "-1",
-        "20_highCube_new": "-1",
-        "40_standard_new": "-1",
-        "40_highCube_new": "-1",
-        "20_standard_used": "2407",
-        "20_highCube_used":  "-1",
-        "40_standard_used": "2729",
-        "40_highCube_used": "2871",
-      },
-      "Von Ormy, TX 78073, USA": {
-        // need info
-      },
-      "Obetz, OH 43207, USA": {
-        "20_standard_new": "-1",
-        "20_highCube_new": "-1",
-        "40_standard_new": "-1",
-        "40_highCube_new": "-1",
-        "20_standard_used": "708",
-        "20_highCube_used":  "-1",
-        "40_standard_used": "2125",
-        "40_highCube_used": "2250",
-      } 
-    }
 
-    return hubPrices[this.state.shortestRoute.hub][this.state.container]
+    axios.get(`/api/getPrice?type=${this.state.containerType}&size=${this.state.containerSize}&location=${this.state.userOrigin.city}`)
+      .then(res => res.data)
+      .then(data => this.handlePrices(data))
+      .catch(err => console.error('Unable to fetch prices: ',err))
+  }
 
+  handlePrices = (prices) => {
+    // find smallest price 
+    // store in state
+    let initMax = Number.MAX_VALUE;
+
+    prices.data.forEach(elem => {
+      elem.price = elem.price.replace(/[^0-9.]/g, '')
+      if(elem.price < initMax) {
+        elem.cheapest = true
+      }
+    });
+
+    this.setState({
+      containerCost: prices.data[0].price.replace(/[^0-9.]/g, '')
+    },this.calculateTotalCost)
+    // return prices.data[0].price.replace(/[^0-9.]/g, '')
   }
 
   calculateTotalCost = () => {
-    if(this.getContainerCostAtHub() < 0) {
-      alert(`Were sorry, ${this.state.container} container is not available for your area`)
-    }
-    else {
-      let totalPrice = this.calculateDeliveryRate() + this.getContainerCostAtHub()*this.state.quantity
+
+    // if(this.getContainerCostAtHub() < 0) {
+    //   alert(`Were sorry, ${this.state.container} container is not available for your area`)
+    // }
+    // else {
+      this.getContainerCostAtHub();
+      let totalPrice = this.calculateDeliveryRate() + this.state.containerCost*this.state.quantity
       this.setState({
         totalPrice,
         showModal: true
       });
-    }
+    // }
 
   }
 
 
   formOneComplete = (isComplete, values) => {
+    let containerSize = values.Size.split(',')[0];
+    let containerType = values.Size.split(',')[1];
+    let containerCondition = values.Size.split(',')[2];
+
     this.setState({
       formOneComplete: isComplete,
       currentStep: 1,
       origins: [values.Zip],
       container: values.Size,
       quantity: values.Quantity,
+      containerSize,
+      containerType
     }, this.calculateDistances);
   }
 
@@ -203,7 +180,7 @@ class App extends Component {
   }
 
   sendEmail = () => {
-    // axios.get(`/api/sendEmail?userEmail=${this.state.userEmail}&address=${this.state.userAddress}&userName=${this.state.userName}&quoteCost=${this.state.totalPrice}`)
+    
     let data = {
       email: this.state.userEmail,
       address: this.state.userAddress,

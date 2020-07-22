@@ -26,14 +26,14 @@ const formPartOne = (props) => {
                 <Select
                   allowClear
                 >
-                  <Option value="20_standard_new">20' Standard New</Option>
-                  <Option value="20_highCube_new">20' High Cube New</Option>
-                  <Option value="40_standard_new">40' Standard New</Option>
-                  <Option value="40_highCube_new">40' High Cube New</Option>
-                  <Option value="20_standard_used">20' Standard Used</Option>
-                  <Option value="20_highCube_used">20' High Cube Used</Option>
-                  <Option value="40_standard_used">40' Standard Used</Option>
-                  <Option value="40_highCube_used">40' High Cube Used</Option>
+                  <Option value="20,STD,NEW">20' Standard New</Option>
+                  <Option value="20,HC,NEW">20' High Cube New</Option>
+                  <Option value="40,STD,NEW">40' Standard New</Option>
+                  <Option value="40,HC,NEW">40' High Cube New</Option>
+                  <Option value="20,STD,USED">20' Standard Used</Option>
+                  <Option value="20,HC,USED">20' High Cube Used</Option>
+                  <Option value="40,STD,USED">40' Standard Used</Option>
+                  <Option value="40,HC,USED">40' High Cube Used</Option>
                 </Select>
               </Form.Item>
               <span className="form-label">Quantity</span>
