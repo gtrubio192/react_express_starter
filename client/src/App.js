@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, isValidElement } from 'react';
 import axios from 'axios';
 import { Steps, Layout, Row, Col } from 'antd';
 import FormPartOne from './components/QuoteForm/formPartOne';
@@ -114,17 +114,26 @@ class App extends Component {
   handlePrices = (prices) => {
     // find smallest price 
     // store in state
-    let initMax = Number.MAX_VALUE;
+    let data = prices.data;
+    let cheapest = {};
+    let initMax = 50000;
 
-    prices.data.forEach(elem => {
-      elem.price = elem.price.replace(/[^0-9.]/g, '')
-      if(elem.price < initMax) {
-        elem.cheapest = true
+    data.forEach(elem => {
+      if(elem.hasOwnProperty('price')) {
+        elem.price = elem.price.replace(/[^0-9.]/g, '');
+        if(!isNaN(elem.price)) {
+          if(elem.price < initMax) {
+            cheapest = elem;
+            initMax = elem.price;
+          }
+        }
       }
     });
 
+    console.log(cheapest)
+
     this.setState({
-      containerCost: prices.data[0].price.replace(/[^0-9.]/g, '')
+      containerCost: cheapest.price
     },this.calculateTotalCost)
     // return prices.data[0].price.replace(/[^0-9.]/g, '')
   }
@@ -135,7 +144,7 @@ class App extends Component {
     //   alert(`Were sorry, ${this.state.container} container is not available for your area`)
     // }
     // else {
-      this.getContainerCostAtHub();
+      // this.getContainerCostAtHub();
       let totalPrice = this.calculateDeliveryRate() + this.state.containerCost*this.state.quantity
       this.setState({
         totalPrice,
