@@ -130,8 +130,6 @@ class App extends Component {
       }
     });
 
-    console.log(cheapest)
-
     this.setState({
       containerCost: cheapest.price
     },this.calculateTotalCost)
